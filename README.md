@@ -6,15 +6,29 @@ This is a Telegram bot application designed to track holiday prices, hotel names
 
 - **Track Holiday Prices**: Automatically fetches and updates holiday prices from specified URLs.
 - **Hotel and Location Information**: Extracts and stores hotel names and locations.
-- **Telegram Integration**: Interact with the bot via Telegram to add or remove tours.
+- **Telegram Integration**: Send messages to a Telegram chat when prices change.
 - **Logging**: Logs all significant actions and errors for easy debugging and monitoring.
 
 ## Requirements
 
 - Python 3.8+
 - [Poetry](https://python-poetry.org/) for dependency management
+- [Docker](https://www.docker.com/) for containerization
 
-## Installation
+## Logging
+
+- Logs are stored in `holiday_price_tracker.log`.
+- Logs include information about added or removed tours and command executions.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`cz commit`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## Setup
 
 1. **Clone the repository**:
 
@@ -32,40 +46,28 @@ This is a Telegram bot application designed to track holiday prices, hotel names
 3. **Install Playwright browsers**:
 
    ```bash
-   poetry run playwright install
+   poetry run playwright install chromium
    ```
 
-4. **Set up your Telegram bot**:
+4. **Set up Telegram bot**:
 
-   - Create a new bot using [BotFather](https://core.telegram.org/bots#botfather) on Telegram.
-   - Obtain your bot token.
+   - Create a new bot using [BotFather](https://core.telegram.org/bots#botfather) on Telegram
+   - Get your bot token
+   - To get your CHAT_ID:
+     1. Send any message to your bot
+     2. Go to `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates`
+     3. Find the `"chat":{"id":` value in the returned JSON - this is your CHAT_ID
 
 5. **Configure the application**:
 
-   - Update the bot token in your application code.
-
-## Usage
-
-1. **Run the bot**:
-
-   ```bash
-   poetry run python holiday_price_tracker/bot.py
-   ```
-
-2. **Interact with the bot**:
-
-   - Use `/start` or `/help` to get started.
-   - Send a URL to track a holiday tour.
-
-## Logging
-
-- Logs are stored in `holiday_price_tracker.log`.
-- Logs include information about added or removed tours and command executions.
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`cz commit`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
+   - Create a `.env` file in the root directory with:
+     ```
+     TELEGRAM_API_TOKEN="your_bot_token"
+     TELEGRAM_CHAT_ID="your_chat_id"
+     ```
+   - Create a `urls.yml` file with the URLs you want to track:
+     ```yaml
+     urls:
+       - https://www.example.com/tour1
+       - https://www.example.com/tour2
+     ```
