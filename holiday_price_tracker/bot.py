@@ -1,7 +1,6 @@
 import asyncio
 import os
 
-import yaml
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
@@ -94,13 +93,12 @@ async def get_tour_details(url):
         return price, hotel_name, location
 
 
-async def process_tours_from_yaml(file_path):
-    with open(file_path, "r") as file:
-        data = yaml.safe_load(file)
-        urls = data.get("urls", [])
+async def get_tours_from_env():
+    tours_str = os.getenv("TOURS_LIST", "")
+    tours_list = tours_str.split(",")
 
     results = []
-    for url in urls:
+    for url in tours_list:
         price, hotel_name, location = await get_tour_details(url)
         results.append(
             {"url": url, "price": price, "hotel_name": hotel_name, "location": location}
@@ -126,8 +124,7 @@ async def send_results_to_telegram(results):
 if __name__ == "__main__":
 
     async def main():
-        file_path = "urls.yml"
-        results = await process_tours_from_yaml(file_path)
+        results = await get_tours_from_env()
         await send_results_to_telegram(results)
 
     asyncio.run(main())
